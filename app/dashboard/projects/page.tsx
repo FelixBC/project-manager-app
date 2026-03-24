@@ -35,67 +35,95 @@ const Projects: React.FC<ProjectsProps> = ({}) => {
     },
   );
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleReset = (e: React.SyntheticEvent<HTMLButtonElement>) => {
+    setProjectFormValues((prev) => ({
+      ...prev,
+      name: "",
+      isActive: false,
+      beginDate: "",
+      endDate: "",
+      description: "",
+    }));
+  };
+
+  const handleSubmit = () => {
     setProjects([...projects, projectFormValues]);
   };
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const key = e.target.name as keyof ProjectFormValues;
-    const target = e.target.name;
+    const fieldName = e.target.name as keyof ProjectFormValues;
     const inputType = e.target.type;
 
     const nextValue =
-      e.target instanceof HTMLInputElement && inputType === "checkbox"
-        ? e.target.checked
-        : e.target.value;
+      e.target && inputType === "checkbox" ? e.target.checked : e.target.value;
     setProjectFormValues((projectFormValues) => ({
       ...projectFormValues,
-      [key]: target,
+      [fieldName]: nextValue,
     }));
   };
 
+  const classNameButtons = "flex flex-row justify-center gap-2 p-2";
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <section>
-        <h1>Projects</h1>
+        <h1 className="text-2xl">Projects</h1>
 
-        <label htmlFor="name">Name</label>
-        <input value={projectFormValues.name} id="name" name="name" />
+        <div className="flex flex-col gap-2 p-2">
+          <label className="gap-2" htmlFor="name">
+            Name
+          </label>
+          <input
+            className="outline-solid"
+            value={projectFormValues.name}
+            id="name"
+            name="name"
+          />
 
-        <label htmlFor="isActive">Active</label>
-        <input
-          id="isActive"
-          name="isActive"
-          type="checkbox"
-          checked={projectFormValues.isActive}
-          onChange={handleOnChange}
-        />
+          <label className="flex flex-col items-start gap-2" htmlFor="isActive">
+            Active
+            <input
+              id="isActive"
+              name="isActive"
+              type="checkbox"
+              checked={projectFormValues.isActive}
+              onChange={handleOnChange}
+            />
+          </label>
+          <label className="gap-2" htmlFor="beginDate">
+            Begin Date
+          </label>
+          <input
+            className="outline-solid"
+            value={projectFormValues.beginDate}
+            id="beginDate"
+            name="beginDate"
+            onChange={handleOnChange}
+          />
 
-        <label htmlFor="name">Name</label>
-        <input
-          value={projectFormValues.beginDate}
-          id="beginDate"
-          name="beginDate"
-          onChange={handleOnChange}
-        />
+          <label className="gap-2" htmlFor="endDate">
+            End Date
+          </label>
+          <input
+            className="outline-solid"
+            value={projectFormValues.endDate}
+            id="endDate"
+            name="endDate"
+            onChange={handleOnChange}
+          />
 
-        <label htmlFor="endDate">EndDate</label>
-        <input
-          value={projectFormValues.endDate}
-          id="endDate"
-          name="endDate"
-          onChange={handleOnChange}
-        />
-
-        <label htmlFor="description">Description</label>
-        <input
-          value={projectFormValues.description}
-          id="description"
-          name="description"
-          onChange={handleOnChange}
-        />
-        <FormActions />
+          <label htmlFor="description">Description</label>
+          <input
+            className="outline-solid"
+            value={projectFormValues.description}
+            id="description"
+            name="description"
+            onChange={handleOnChange}
+          />
+        </div>
       </section>
+
+      <FormActions className={classNameButtons} onReset={handleReset} />
     </form>
   );
 };
